@@ -4,7 +4,7 @@ import { GRUPOS, CORES } from '../data/vestibulares'
 import { useRouter } from 'next/navigation'
 import MarkdownResposta from '@/components/MarkdownResposta'
 
-const API = 'http://localhost:8000'
+const API = "https://omegaprep-backend-production.up.railway.app";
 
 const ASSUNTOS = {
   'Matemática':  ['Álgebra','Funções','Trigonometria','Geometria Plana','Geometria Espacial','Geometria Analítica','Logaritmos','Progressões','Combinatória','Probabilidade','Estatística','Matrizes','Números Complexos'],

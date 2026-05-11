@@ -3,7 +3,7 @@ import ReactMarkdown from 'react-markdown'
 import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
 
-const API = 'http://localhost:8000'
+const API = "https://omegaprep-backend-production.up.railway.app";
 
 function renderizarComImagens(texto) {
   if (!texto) return []

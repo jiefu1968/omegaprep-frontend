@@ -4,7 +4,7 @@ import { GRUPOS } from '../data/vestibulares'
 import { useRouter } from 'next/navigation'
 import MarkdownResposta from '@/components/MarkdownResposta'
 
-const API = 'http://localhost:8000'
+const API = "https://omegaprep-backend-production.up.railway.app";
 const DISCS = ['Matemática','Física','Química','Biologia','Português','Inglês','História','Geografia','Redação']
 
 export default function GPT() {
