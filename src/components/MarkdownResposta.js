@@ -5,6 +5,26 @@ import rehypeKatex from 'rehype-katex'
 
 const API = "https://omegaprep-backend-production.up.railway.app";
 
+function renderizarComSVG(texto) {
+  if (!texto) return []
+  const partes = []
+  const regex = /<svg[\s\S]*?<\/svg>/gi
+  let ultimo = 0
+  let match
+  let i = 0
+  while ((match = regex.exec(texto)) !== null) {
+    if (match.index > ultimo) {
+      partes.push({ tipo: 'texto', conteudo: texto.slice(ultimo, match.index), key: i++ })
+    }
+    partes.push({ tipo: 'svg', conteudo: match[0], key: i++ })
+    ultimo = match.index + match[0].length
+  }
+  if (ultimo < texto.length) {
+    partes.push({ tipo: 'texto', conteudo: texto.slice(ultimo), key: i++ })
+  }
+  return partes
+}
+
 function renderizarComImagens(texto) {
   if (!texto) return []
   const partes = []
@@ -103,12 +123,30 @@ const mdComponents = {
 
 export default function MarkdownResposta({ texto, loading }) {
   if (!texto) return null
-  const partes = renderizarComImagens(texto)
+  // Primeiro detecta SVGs, depois imagens dentro de cada parte texto
+  const partesComSVG = renderizarComSVG(texto)
+  const partes = []
+  partesComSVG.forEach((p, idx) => {
+    if (p.tipo === 'svg') {
+      partes.push(p)
+    } else {
+      renderizarComImagens(p.conteudo).forEach((sub, sidx) => {
+        partes.push({...sub, key: idx * 1000 + sidx})
+      })
+    }
+  })
 
   return (
     <div className="resposta">
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"/>
       {partes.map(parte => {
+        if (parte.tipo === 'svg') {
+          return (
+            <div key={parte.key} style={{margin:'20px 0',textAlign:'center',overflowX:'auto'}}
+              dangerouslySetInnerHTML={{__html: parte.conteudo}}
+            />
+          )
+        }
         if (parte.tipo === 'imagem') {
           return (
             <div key={parte.key} style={{margin:'16px 0',textAlign:'center'}}>
